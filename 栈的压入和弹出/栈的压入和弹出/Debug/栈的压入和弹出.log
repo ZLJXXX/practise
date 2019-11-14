@@ -1,0 +1,30 @@
+﻿生成启动时间为 2019/11/14 22:01:03。
+     1>项目“C:\Users\asus\Desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\栈的压入和弹出.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         F:\vs2013\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt test.cpp
+         test.cpp
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(2): warning C4005: “_CRT_SECURE_NO_WARNINGS”: 宏重定义
+                 c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(1) : 参见“_CRT_SECURE_NO_WARNINGS”的前一个定义
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(6): error C2061: 语法错误: 标识符“vector”
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(9): error C2065: “pushV”: 未声明的标识符
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(9): error C2228: “.size”的左边必须有类/结构/联合
+                 类型是“unknown-type”
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(10): error C2065: “stack”: 未声明的标识符
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(10): error C2062: 意外的类型“int”
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(12): warning C4018: “<”: 有符号/无符号不匹配
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(14): error C2065: “s”: 未声明的标识符
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(14): error C2228: “.push”的左边必须有类/结构/联合
+                 类型是“unknown-type”
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(14): error C2065: “pushV”: 未声明的标识符
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(15): error C2065: “s”: 未声明的标识符
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(15): error C2228: “.empty”的左边必须有类/结构/联合
+                 类型是“unknown-type”
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(15): error C2228: “.top”的左边必须有类/结构/联合
+                 类型是“unknown-type”
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(15): error C2065: “popV”: 未声明的标识符
+     1>c:\users\asus\desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\test.cpp(15): fatal error C1903: 无法从以前的错误中恢复；正在停止编译
+     1>已完成生成项目“C:\Users\asus\Desktop\bite (1)\栈的压入和弹出\栈的压入和弹出\栈的压入和弹出.vcxproj”(Build 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:05.46
