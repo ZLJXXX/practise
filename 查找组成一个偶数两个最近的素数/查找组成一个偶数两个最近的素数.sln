@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "查找组成一个偶数两个最近的素数", "查找组成一个偶数两个最近的素数\查找组成一个偶数两个最近的素数.vcxproj", "{BF2C38B2-AF0D-4B84-BAE0-02CB2F2A0624}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF2C38B2-AF0D-4B84-BAE0-02CB2F2A0624}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF2C38B2-AF0D-4B84-BAE0-02CB2F2A0624}.Debug|Win32.Build.0 = Debug|Win32
+		{BF2C38B2-AF0D-4B84-BAE0-02CB2F2A0624}.Release|Win32.ActiveCfg = Release|Win32
+		{BF2C38B2-AF0D-4B84-BAE0-02CB2F2A0624}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
