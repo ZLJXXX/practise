@@ -1,0 +1,12 @@
+﻿生成启动时间为 2019/11/29 19:26:12。
+     1>项目“C:\Users\asus\Desktop\bite (1)\将三个数从大到小排序\将三个数从大到小排序\将三个数从大到小排序.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         F:\vs2013\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt test.cpp
+         test.cpp
+     1>c:\users\asus\desktop\bite (1)\将三个数从大到小排序\将三个数从大到小排序\test.cpp(6): error C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 f:\vs2013\vc\include\stdio.h(283) : 参见“scanf”的声明
+     1>已完成生成项目“C:\Users\asus\Desktop\bite (1)\将三个数从大到小排序\将三个数从大到小排序\将三个数从大到小排序.vcxproj”(Build 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:00.73
