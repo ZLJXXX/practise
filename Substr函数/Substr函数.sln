@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "substr函数", "substr函数\substr函数.vcxproj", "{735C9B6C-2D29-4840-A750-113CDEB13860}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Substr函数", "Substr函数\Substr函数.vcxproj", "{177F420A-E291-466A-8B9E-038B7FA0B184}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{735C9B6C-2D29-4840-A750-113CDEB13860}.Debug|Win32.ActiveCfg = Debug|Win32
-		{735C9B6C-2D29-4840-A750-113CDEB13860}.Debug|Win32.Build.0 = Debug|Win32
-		{735C9B6C-2D29-4840-A750-113CDEB13860}.Release|Win32.ActiveCfg = Release|Win32
-		{735C9B6C-2D29-4840-A750-113CDEB13860}.Release|Win32.Build.0 = Release|Win32
+		{177F420A-E291-466A-8B9E-038B7FA0B184}.Debug|Win32.ActiveCfg = Debug|Win32
+		{177F420A-E291-466A-8B9E-038B7FA0B184}.Debug|Win32.Build.0 = Debug|Win32
+		{177F420A-E291-466A-8B9E-038B7FA0B184}.Release|Win32.ActiveCfg = Release|Win32
+		{177F420A-E291-466A-8B9E-038B7FA0B184}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
