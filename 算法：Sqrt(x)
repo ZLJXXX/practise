@@ -1,0 +1,125 @@
+说明
+算法：Sqrt(x)
+LeetCode地址：https://leetcode.com/problems/sqrtx/
+
+题目：
+Implement int sqrt(int x).
+
+Compute and return the square root of x, where x is guaranteed to be a non-negative integer.
+
+Since the return type is an integer, the decimal digits are truncated and only the integer part of the result is returned.
+
+Example 1:
+
+Input: 4
+Output: 2
+1
+2
+Example 2:
+
+Input: 8
+Output: 2
+Explanation: The square root of 8 is 2.82842..., and since 
+             the decimal part is truncated, 2 is returned.
+解题思路1
+求平方根，思路为从缩小两端范围[left, right], left为从1开始，right为从入参x开始。条件如下：
+
+x < 1, 直接返回0
+取中值 mid = left + right >> 1, 用位移的方式来获取除以2更快速
+如果mid > x / mid, 则缩小right = mid
+如果mid <= x / mid, 则(mid + 1) * (mid + 1) > x, 则说明mid为最终结果；否则，left = mid + 1;
+代码实现1
+public class Sqrt {
+
+    public static int mySqrtWithMid(int x) {
+        if(x < 1) {
+            return 0;
+        }
+        int left = 0;
+        int right = x;
+        while(true) {
+            int mid = left + ((right - left) >> 1);
+            if (mid < 1) {
+                return 1;
+            }
+            if (mid > x / mid) {
+                right = mid;
+            } else {
+                if (mid + 1 > x/(mid + 1)) {
+                    return mid;
+                }
+
+                left = mid + 1;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int input1 = 4;
+        System.out.println("input: " +input1+ " mySqrtWithMid: " + mySqrtWithMid(input1));
+
+        int input2 = 8;
+        System.out.println("input: " +input2+ " mySqrtWithMid: " + mySqrtWithMid(input2));
+    }
+}
+运行结果1
+input: 4 mySqrtWithMid: 2
+input: 8 mySqrtWithMid: 2
+
+1
+2
+3
+代码执行效率1
+Runtime: 13 ms, faster than 99.97% of Java online submissions for Sqrt(x).
+Memory Usage: 38.1 MB, less than 7.02% of Java online submissions for Sqrt(x).
+
+解题思路2
+第二种思路需要证明, 喜欢开脑洞的可以看看参考链接如何证明，参考 牛顿迭代法求平方根，然后再参考维基百科的 Integer square root 即可。
+
+
+代码实现2
+public class Sqrt {
+
+    public static int mySqrt(int x) {
+        if (x < 1) {
+            return 0;
+        }
+
+        long y = x;
+        while (y * y > x) {
+            y = (long)(0.5 * (y + x / y));
+        }
+
+        return (int)y;
+    }
+
+    public static void main(String[] args) {
+        int input1 = 4;
+        System.out.println("input: " +input1+ " mySqrt: " + mySqrt(input1));
+
+        int input2 = 8;
+        System.out.println("input: " +input2+ " mySqrt: " + mySqrt(input2));
+    }
+}
+
+
+运行结果2
+input: 4 mySqrt: 2
+input: 8 mySqrt: 2
+
+1
+2
+3
+代码执行效率2
+Runtime: 14 ms, faster than 94.36% of Java online submissions for Sqrt(x).
+Memory Usage: 38.1 MB, less than 5.29% of Java online submissions for Sqrt(x).
+Next challenges:
+
+总结
+二分法应用。
+
+代码下载：
+https://github.com/zgpeace/awesome-java-leetcode/blob/master/code/LeetCode/src/Sqrt.java
+————————————————
+版权声明：本文为CSDN博主「程序员易筋」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/zgpeace/article/details/88389424
