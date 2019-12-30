@@ -1,0 +1,70 @@
+select函数
+#include<sys/select.h>
+int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
+参数解释：
+
+nfds：需要监视的最大文件描述符值+1；+1是为了：减少工作量
+rdset,wrset,exset分别对应于需要检测的可读文件描述符的集合，可写文件描述符的集合及异常文件描述符的集合； 
+参数timeout为结构timeval，用来设置select()的等待时间；
+timeout取值：
+
+NULL：则表示select（）没有timeout，select将一直被阻塞，直到某个文件描述符上发生了事件;。
+0：仅检测描述符集合的状态，然后立即返回，并不等待外部事件的发生。
+特定的时间值：如果在指定的时间段里没有事件发生，select将超时返回。
+-1：永久阻塞。
+关于fd_set结构，
+
+文件描述符集，输入输出型参数，输入：用户告诉内核我要关注哪些文件描述符上的哪些事件（比特位位置和比特位内容）。输出：内核告诉用户哪些文件描述符上的哪些事件准备好了。承受双份责任，调用一次之后，文件描述符集有可能会发生变化，每次调用都要重新设置。就要保存之前的文件描述符集，借助一个第三方的数组。0
+
+__fd_mask长整型 long int
+32位：4字节  64位：8字节
+
+FD_SETSIZE_
+#define __NFDBITS (8* (int) sizeof(__fd_MASK))，32，64
+#define __FD_SETSIZE  1024
+
+__fd_mask  fds_bits[__FD_SETSIZE / __NFDBITS];最大监控数
+描述符有上限，缺点
+
+fd_set其实就是一个整数数组，更严格的说，是一个“位图”。使用位图中对应的位来表示要监视的文件描述符。
+
+关于timeval结构
+
+timeval结构用于描述一段时间长度，如果在这个时间内，需要监视的描述符没有事件发生则函数返回值为 0。
+
+函数返回值
+
+执行成功则返回文件描述词状态已改变的个数
+如果返回0代表在描述词状态改变前已超过timeout时间，没有返回
+当有错误发生时则返回-1，错误原因存于errno，此时参数readfds，writefds, exceptfds和timeout的 值变成不可预测
+select就绪条件
+读就绪
+
+socket内核中, 接收缓冲区中的字节数（接收缓冲区的空闲位置大小）, 大于等于低水位标记SO_RCVLOWAT，此时可以无阻塞的读该文件描述符, 并且返回值大于0;
+socket TCP通信中, 对端关闭连接, 此时对该socket读, 则返回0;
+监听的socket上有新的连接请求;
+socket上有未处理的错误;
+写就绪
+
+socket内核中, 发送缓冲区中的可用字节数(发送缓冲区的空闲位置大小), 大于等于低水位标记 SO_SNDLOWAT, 此时可以无阻塞的写, 并且返回值大于0;
+socket的写操作被关闭(close或者shutdown). 对一个写操作被关闭的socket进行写操作, 会触发SIGPIPE 信号;
+socket使用非阻塞connect连接成功或失败之后;
+socket上有未读取的错误;
+异常就绪
+
+socket上收到带外数据. 关于带外数据, 和TCP紧急模式相关(回忆TCP协议头中, 有一个紧急指针的字段)。
+select的特点
+可监控的文件描述符个数取决与sizeof(fd_set)的值. 我这边服务器上sizeof(fd_set)＝512，每bit表示一个文件描述符，则我服务器上支持的最大文件描述符是512*8=4096.。
+将fd加入select监控集的同时，还要再使用一个数据结构array（经常遍历）保存放到select监控集中的fd，
+一是用于再select 返回后，array作为源数据和fd_set进行FD_ISSET判断。
+二是select返回后会把以前加入的但并无事件发生的fd清空，则每次开始select前都要重新从array取得 fd逐一加入(FD_ZERO最先)，扫描array的同时取得fd最大值maxfd，用于select的第一个参数。
+备注: fd_set的大小可以调整，可能涉及到重新编译内核。
+
+select缺点
+每次调用select, 都需要手动设置fd集合, 从接口使用角度来说也非常不便。需要设置第三方数组
+每次调用select，都需要把fd集合从用户态拷贝到内核态，这个开销在fd很多时会很大。
+同时每次调用select，都需要在内核遍历传递进来的所有fd，这个开销在fd很多时也很大。
+select支持的文件描述符数量太小（数据对象fd_set有上限）。
+————————————————
+版权声明：本文为CSDN博主「奄奄不息」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_41209741/article/details/88530218
