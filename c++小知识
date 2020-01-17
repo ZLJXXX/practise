@@ -1,0 +1,280 @@
+C++ 输入输出流
+字符串输入输出流
+使用简记：
+ostringstream、istringstream分别用来输出输出字符串，这可以用在字符串和其他类型之间的转化，比如你要将int类型转化为字符串，那么应该选择ostringstream，因为他是输出字符串的。
+strm.str()：返回 strm 所保存的 string 的拷贝；
+strm.str(s)：将 string s拷贝到 strm 中，返回 void.
+str有提供字符串就是输入，没有提供字符串就是输出。
+例子：
+将数字翻转，123转化为321，首先要将123转化为字符串，然后反转，然后转化为数字。
+int main(int argv, char** argc) {
+
+    int num = 123;
+
+    //转化为字符串
+    ostringstream toString;
+    toString << num;
+    string str = toString.str();
+
+    //翻转
+    reverse(str.begin(), str.end());
+
+    //转化为int
+    istringstream getInt;
+    getInt.str(str);
+    getInt >> num;
+
+    cout << num << endl;
+
+    system("pause");
+}
+写一个正经函数吧！ Make your functions functional
+首先介绍了为什么全局变量不好？不是因为作用域（全局常量就是个好东西）——其实我觉得是，也不是因为线程安全，而是因为他们打断了函数。
+函数将程序分解为多个部分，使得程序有更好的可读性。但是函数必须有明确的输入和输出，但是全局变量有了很多不明显的输入和输出。
+明确输入和输出，参数就只作为输入，只用 const Type& ，输出也只从返回结果从出来，比较自然。那为什么人们不怎么做呢？
+性能：返回值在C中会产生复制，但在C++中一些机制不会产生复制，而且80%的代码，性能根本不是问题。
+错误处理：下面代码就是一个例子，可以用异常来处理错误，如果不想用异常，可以在失败的时候返回null。
+Output output;
+bool success = f(input, output);
+if (success)
+{
+   // use output ...
+}
+多个返回值：用结构体或者tuple
+
+Output output;
+bool success = f(input, output);
+if (success)
+{
+   // use output ...
+}
+[](A Concrete Example of Naming Consistency)
+
+STL：集合相关算法 Know your algorithms: algos on sets
+介绍了集合的并差交对称、包含相关方法的调用，讲的非常好，注意输入的集合必须是排序好的，程序预设，性能原因。具体的算法实现没有在这里面讲到，在这里How is std::set_difference Implemented? 还是很简单的。注意set并不是数学意义上的集合，
+
+It does a difference of sets (a set in a sense of a sorted collection, not only std::set). That is to say with a sorted collection A and a sorted collection B, set_difference outputs the elements in A that are not present in B:
+
+知道STL算法的重要性 The importance of knowing STL <algorithm>s
+首先解释了下面语句参数含义，首先是复制，从employees复制到employeeRegister，输入begin和end都是迭代器，std::back_inserter是输入employeeRegister的起始迭代器，一开始不用考虑分配多大的课件给employeeRegister，每次迭代的时候调用其push_back进行分配。
+std::copy(employees.begin(), employees.end(), std::back_inserter(employeeRegister));
+当然用户也可以自己实现
+
+for (std::vector<company::salesForce::Employee>::const_iterator it = employees.begin(); it != employees.end(); ++it)
+{
+employeeRegister.push_back(*it);
+}
+使用官方算法的好处：
+
+增加可读性，程序说的是做什么，而不是怎么做
+减少bug
+算法复杂度低
+官方算法在实现的时候解耦了数据和算法，数据和操作独立分开来
+容易犯的错误：
+不要任何时候都用for_each，计数的时候可以用std::count，是否存在某一std::any_of，还有std::all_of、（用来判断两个序列是否为同一元素集的不同排列）
+
+
+
+看起来不是很面熟的不需要看，实际上对我们写程序有好处，比如下面这两段实现同一个功能的程序，想一个cache中不重复地添加另外一些元素，可以看出上面所说的使用算法的优点。
+
+for (std::multimap<Key, Value>::const_iterator it = newResults.begin(); it != newResults.end(); ++it)
+{
+std::pair<std::multimap<Key, Value>::const_iterator, std::multimap<Key, Value>::const_iterator> range = cachedResults.equal_range(it->first);
+if (range.first == range.second)
+{
+std::multimap<Key, Value>::const_iterator it2 = it;
+while (!(it2->first < it->first) && !(it->first < it2->first))
+{
+++it2;
+}
+cachedResults.insert(it, it2);
+}
+}
+std::multimap<Key, Value> resultsToAdd;
+std::set_difference(newResults.begin(),
+                    newResults.end(),
+                    cachedResults.begin(),
+                    cachedResults.end(),
+                    std::inserter(resultsToAdd, resultsToAdd.end()),
+                    compareFirst);
+std::copy(resultsToAdd.begin(), resultsToAdd.end(), std::inserter(cachedResults, cachedResults.end()));
+总结：正如你需要知道 if and for，你也需要知道这些算法。
+
+遵循抽象层 It all comes down to respecting levels of abstraction
+抽象层很重要。
+多态中，基类和接口更抽象。
+
+命名：
+命名的时候也有也分抽象层，比如描述how的时候用getMap，描述what的时候用getName，后者更加抽象，前者会更具体一点，因为Map代表的是做的时候的数据结构。
+
+简洁和可读性：
+修改前
+
+void saveIndex(Index const& index)
+{
+if (index.hasID() && index.isQuoted() && index.isLiquid())
+{
+...
+修改后
+
+void saveIndex(const Index& index)
+{
+    if (isValid(index))
+    {
+        ...
+isValid跟saveIndex处在同一个抽象层，将how抽出来。
+
+表现力
+如果要去掉一些元素，remove_if 官方算法表达了what，而自己实现还要去写how。
+
+Size and Capacity of STL Containers
+Capacity
+指的是全部内存的容量，通常是在容器内部实现相关（内存不够了分配多点内存），外部一般不能接触到。
+
+获取size相关信息
+size()：返回实际上拥有的元素数量
+length()：同上，不过是字符串的
+empty()：判断是否为空
+max_size()：容器所能容纳的最大数量
+std::distance()：只有迭代器而不是容器的时候计算出范围长度
+
+修改size
+增减元素；
+创建的时候构造器参数；
+
+vector<char> v(15);
+vector<char> v(15, 'a');//置顶默认值
+resize修改元素的大小；
+
+获取capacity：
+主要是用在vector、strings上面，因为这两个内存不够的时候会分配重新分配内存，然后复制原来的元素，如果你要提高效率就要capacity的信息（调用capacity()方法即可），reserve就是用来提前分配内存的，如果你知道要用到多少内存，这样可以提高效率。deques 内存不够的时候会继续增加内存。
+
+减少capacity：
+In C++11：shrink_to_fit()
+Before C++11：
+
+vector<int> v = ...;
+// ...
+// v used to have many elements but  was sized down
+// it now has excess capacity
+ 
+std::vector<int>(v.begin(), v.end()).swap(v);
+How to split a string in C++
+怎么获取一个句子的单词集合？
+创建字符串 The Complete Guide to Building Strings In C++: From “Hello World” Up To Boost Karma
+一个或者多个：构造器，+，+=
+多个：
+//实际上也是用+，效率比单纯的+还要低
+std::string result = std::accumulate(begin(words), end(words), std::string())
+ostringstream：输入输出，格式控制
+Boost Format:：格式化
+Boost Karma：更高级的格式化
+
+命名 How to choose good names in your code
+为了避免函数臃肿，可以将部分内容放在参数中
+不用
+
+void saveEmployee(Employee const& employee);
+用
+
+void save(Employee const& employee);
+去掉否定部分
+不用
+
+if (isNotValid(id))
+{
+而用
+
+if (!isValid(id))
+{
+描述代码做什么，而不是怎么做
+对比 computeSalariesPairVector 和 computeEmployeeSalaries
+
+This relieves the call site from some implementation details, letting you, as a reader of the code, focus on what the code is intending to do
+屏蔽技术细节，只描述what
+You’d name your int variable “age”, rather than “i”. You’d name the above Employee “manager” and not just “employee”. You’d name the vector “temperatures” rather than “doubles” .
+同样是how和what
+
+std::vector<CashFlow> flows = ...
+auto it = std::find_if(flows.begin(), flows.end(), isPositive);
+std::cout << "Made " it->getValue() << "$, at last!" << std::endl;
+std::vector<CashFlow> flows = ...
+auto firstPositiveFlow = std::find_if(flows.begin(), flows.end(), isPositive);
+std::cout << "Made " << firstPositiveFlow->getValue() << "$, at last!" << std::endl;
+template <typename T>
+T parse(SerializedInput& input)
+{
+    T result;
+    // ... perform the parsing ...
+    return result;
+}
+template <typename ParsedType>
+ParsedType parse(SerializedInput& input)
+{
+    ParsedType result;
+    // ... perform the parsing ...
+    return result;
+}
+A Concrete Example of Naming Consistency
+lamda表达式比起一般的函数要简洁很多，但是也暴露了how 而不是what，特别是比较长的时候，我们可以封装成下面这样。
+auto resists(const Product& product)
+{
+return [product](const Box& box)
+{
+const double volume = box.getVolume();
+const double weight = volume * product.getDensity();
+const double sidesSurface = box.getSidesSurface();
+const double pressure = weight / sidesSurface;
+const double maxPressure = box.getMaterial().getMaxPressure();
+return pressure <= maxPressure;
+};
+}
+Ranges: the STL to the Next Level
+STL主要分为容器和对应的算法
+但是STL算法有两个问题：
+1.使用迭代器可以停在特定的元素上，但这会让函数调用变得比较琐碎。
+2.算法组合不方便。
+input所有元素都经过f函数计算后放进output
+std::transform(input.begin(), input.end(), std::back_inserter(output), f);
+选出特定的元素
+
+std::copy_if(input.begin(), input.end(), std::back_inserter(output), p);
+但是却不能组成成 input部分元素都经过f函数计算后放进output
+Ranges优雅地解决了这些问题。
+Range的含义如下，并且all STL containers are themselves ranges.
+
+Range
+{
+    begin()
+    end()
+}
+于是第一个问题就解决了。
+
+ranges::transform(input, std::back_inserter(output), f);
+std::transform(input.begin(), input.end(), std::back_inserter(output), f);
+智能迭代器 transform_iterator filter_iterator
+Range adaptors ：结合另外一个range可以得到新的range
+下面实现了我们上面所说的部分转化的功能
+
+ranges::accumulate(numbers | view::filter(isEven) | view::transform(multiplyBy2), 0);
+为什么不赞同iterator std::iterator is deprecated: Why, What It Was, and What to Use Instead
+看不大懂
+
+for_each过时了吗？ Is std::for_each obsolete?
+从抽象层度，for_each不像for一样会展示内部细节。
+
+for (auto number : numbers)
+{
+    if (number > 0)
+        std::cout << '+' << number << '\n';
+    else if (number == 0)
+        std::cout << "nop" << '\n';
+    else if (number < 0)
+        std::cout << number << '\n';
+}
+std::for_each(begin(numbers), end(numbers), displayAsInstruction);
+一键多值的时候要选哪个？ Which One Is Better: Map of Vectors, or Multimap?
+一个事件对应多个监听者，下面哪个数据结构适合？
+
+a map of vectors: std::map<EventID, std::vector<EventReceiver const*>>
+a multimap: std::multimap<EventID, EventReceiver const*>
