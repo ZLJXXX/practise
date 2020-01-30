@@ -1,0 +1,74 @@
+迷宫问题 
+描述 
+定义一个二维数组： 
+int maze[5][5] = { 
+0, 1, 0, 0, 0, 
+0, 1, 0, 1, 0, 
+0, 0, 0, 0, 0, 
+0, 1, 1, 1, 0, 
+0, 0, 0, 1, 0, 
+}; 
+它表示一个迷宫，其中的1表示墙壁，0表示可以走的路，只能横着走或竖着走，不能斜着走，要求编程序找出从左上角到右下角的最短路线。
+
+简单看一下，就是普通的广搜题，但是我的代码可能有些冗长，待日后优划。
+
+#include<iostream>
+#include<cstring>
+#include<cstdlib>
+#include<cmath>
+#include<cstdio>
+#include<algorithm>
+#include<stack>
+using namespace std;
+int map[6][6],visit[6][6];
+int Next[4][2] = {{-1,0},{1,0},{0,1},{0,-1}};
+struct queue{
+    int x,y;
+    int pre;
+    int step;
+}que[1001];
+int main(){
+    for(int i = 0;i<5;i++){
+        for(int j = 0;j<5;j++){
+            scanf("%d",&map[i][j]);
+        }
+    }
+    int head = 1,tail = 1;
+    que[tail].x = 0;
+    que[tail].y = 0;
+    que[tail].pre = 0;
+    que[tail].step = 1;
+    visit[0][0] = 1;
+    tail ++;
+    while(head < tail){
+        bool judge = false;
+        for(int i = 0;i<4;i++){
+            int tx = que[head].x + Next[i][0];
+            int ty = que[head].y + Next[i][1];
+            if(tx < 0 || tx > 4 || ty < 0 || ty > 4){
+                continue;
+            }
+            if(!visit[tx][ty] && !map[tx][ty]){
+                visit[tx][ty] = 1;
+                que[tail].x = tx;
+                que[tail].y = ty;
+                que[tail].pre = head;
+                que[tail].step = que[head].step + 1;
+                tail++;
+            }
+        }
+        head++;
+    }
+    int tmp = tail - 1;
+    int ans[31][2],len = 0;
+    while(que[tmp].pre != 0){
+        ans[++len][0] = que[tmp].x;
+        ans[len][1] = que[tmp].y;
+        tmp = que[tmp].pre;
+    }
+    cout<<"(0, 0)"<<endl;
+    for(int i = len;i>=1;i--){
+        cout<<"("<<ans[i][0]<<", "<<ans[i][1]<<")"<<endl;
+    }
+    return 0;
+}
