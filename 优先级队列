@@ -1,0 +1,199 @@
+
+优先队列，又称为优先级队列、堆。优先队列是一种特殊的队列，除了具有队列的先入先出，队列头出，队列尾入的结构特点，优先队列最重要的就是要实现快速得到队列中优先级最高的元素，因此，优先队列有一定的顺序特点，这是一种弱序，即队列头部的那个元素是优先级最高的，我们往往以元素值的大小作为优先级来讨论，比如说，数值大的优先级高，则优先队列元素会按一定规则的大小顺序排列，从而使得在队列头部的元素始终保持数值最大（优先级最高）的特点。总之，优先队列的目的就是实现将元素入队列，并快速返回队列优先级最高优先级元素。
+
+优先队列最常见的用处便是基于优先队列实现的堆排序。利用优先队列找到、返回、删除最高优先级元素的快速性，将所有待排序的元素一个一个加入到优先队列中，然后依次返回优先级最高的元素，从而实现排序。
+
+为了实现上述的方法，我们可以使用链表，而且链表有两种实现方式，第一种，正常入队列，返回优先级最高的元素时采用遍历的方式；第二种，入队列时进行排序，将优先级最高的排在队列头部，返回优先级最高的元素时只需返回头部元素即可。但是，利用链表实现的这两种方式的时间复杂度都较高，因此，我们不用这两种方式。
+
+为了高效地实现优先队列，我们可以使用二叉堆。由于使用二叉堆实现优先队列是如此的常见、高效，时间复杂度较低，空间复杂度也较低，因此我们常常称优先队列为二叉堆、甚至更简单地称为堆。除了常见的二叉堆，还有d堆、左式堆、斜堆、二项队列等实现优先队列的方法，但是二叉堆太常用了，其它的都成了陪衬。
+
+什么是二叉堆？二叉堆可以认为是一棵特殊的完全二叉树，其结构特点为：除了最后一层外，其余各层的每个节点都有0或2个子节点；其顺序特点为：每一个节点的优先级（可以自己定义优先级，比如数值大是优先级高或者数值小是优先级高）都大于或等于其两个子节点的优先级。由于二叉堆十分有规律，因此我们不用树常见的链式结构来构造，而是使用更加简单高效的数组来构造，数组的0位置不使用，从1位置开始使用，若将二叉堆的树描述上标注数组位置，我们可以发现，假设一个元素的位置为k，则其父节点的位置为（k/2 结果向下取整），其左子节点的位置为2*k，右子节点的位置为2*k+1。正因为有着这样的查找规律，我们才能利用数组高效地构造二叉堆。
+
+通过上面对二叉堆的介绍，我们发现二叉堆的顺序特点可以保证根节点的优先级永远大于其余所有节点的优先级，因此通过二叉堆实现优先队列是如此的自然。但是我们也发现，二叉堆的优先级一旦定下来就没法改变了，比如说我们定义一个min二叉堆，即最高优先级为值最小，此时我们可以快速找到值最小的元素（就在根节点），而无法像找到最小元素一样快速地找到最大元素，因为我们只知道最大的元素在叶子节点上，但具体在哪无法知道。因此，二叉堆往往有多种，常见的有min二叉堆，max二叉堆，我们还可以定义其他的优先级二叉堆。用二叉堆实现的优先队列也是如此，有minPriorityQueue、maxPriorityQueue等等。
+
+如何通过二叉堆实现优先队列呢，我们要注意以下几个问题：
+
+首先，由于二叉堆的结构特点，我们在插入一个元素的时候必须在队列的最后插入元素；我们在删除优先级最高元素时只需要删除队列头部的元素（速度很快）。由于节点具有k，父节点k/2，字节点2k、2k+1的特点，可以用数组实际存储元素，并且数组的位置0不用于存储优先队列的元素，而是用作“哨兵”（即在下沉、上浮时，存入待下沉或上浮的元素，避免对两两元素进行交换的额外开销）。
+
+其次，由于二叉堆的顺序特点，我们必须在插入一个元素或者删除优先级最高元素后，重新调整二叉堆的元素，使其恢复顺序，即保证每一个元素的优先级都大于或等于其两个子节点的优先级（虽然调整的这个步骤有一定的开销，但相较于直接用链表（插入常数，删除线性时间复杂度）或者二叉查找树（插入和查找都是对数时间复杂度），用二叉堆实现优先队列是更高效的，二叉堆实现中删除最高优先级元素只需要常数时间复杂度，插入元素只需要对数时间复杂度）。
+
+再次，实现优先队列时要清楚最高优先级的定义（数值越大优先级越高、数值越小优先级越高、或是其他的准则）。
+
+最后，说明一下插入或删除元素后对二叉堆如何调整，从而使得二叉堆恢复顺序。插入元素时，将元素插入最后的位置（队列尾部），然后对该元素进行上浮，从而恢复顺序。删除元素时，从根节点（队列头部）删除最大优先级元素，然后将队列尾部的元素置于根节点上，然后对该元素进行下沉，从而恢复顺序。
+
+下面给出基于二叉堆的maxPriorityQueue和minPriorityQueue实现代码。
+
+package algorithm02;
+        //maxPriorityQueue
+public class MaxPQ<any extends Comparable<? super any>> {
+        //用于存储优先队列元素的数组，数组的位置0不用，从位置1开始存储
+	private any[] array;
+        //代表当前优先队列中的元素数量，即优先队列的长度
+	private int currentSize;
+        //构造器，需要初始化优先队列的最大存储数量
+	public MaxPQ(int length){
+		array = (any[]) new Comparable[length+1];
+		currentSize = 0;
+	}
+        //插入元素的方法，
+	public void insert(any x) {
+		if(currentSize == array.length-1) {
+			enlargeArray(currentSize * 2 + 1);
+		}
+		int hole = ++currentSize;
+		for(array[0]=x;x.compareTo(array[hole/2])>0;hole=hole/2) {
+			array[hole] = array[hole/2];
+		}
+		array[hole] = x;
+	}
+        //找出优先队列中的最大值
+	public any findMax() throws Exception {
+		if(isEmpty()) {
+			throw new Exception();
+		}
+		return array[1];
+	}
+        //找出、返回、并删除优先队列中的最大值
+	public any deleteMax() throws Exception {
+		if(currentSize==0) {
+			throw new Exception();
+		}
+		any max = findMax();
+		array[1] = array[currentSize--];
+		sink(1);
+		return max;
+	}
+        //判断优先队列是否为空
+	public boolean isEmpty() {
+		return currentSize==0;
+	}
+        //将优先队列置为空
+	public void makeEmpty() {
+		currentSize = 0;
+	}
+	    //工具方法，扩容数组
+	private void enlargeArray(int newLength) {
+		@SuppressWarnings("unchecked")
+		any[] newArray = (any[]) new Comparable[newLength];
+		for(int i=1;i<=currentSize;i++) {
+			newArray[i] = array[i];
+		}
+		array = newArray;
+	}
+        //工具方法，下沉
+	private void sink(int hole) {
+		int child;
+		any temp = array[hole];
+		for(;hole*2<=currentSize;hole=child) {
+			child = hole * 2;
+			if(child!=currentSize && array[child+1].compareTo(array[child])>0) {
+				child++;
+			}
+			if(array[child].compareTo(array[hole])>0) {
+				array[hole] = array[child];
+			}
+		}
+		array[hole] = temp;
+	}
+}
+package algorithm02;
+        //minPriorityQueue
+public class MinPQ<any extends Comparable<? super any>> {
+        //当前优先队列中存储的元素数量
+	private int currentSize;
+        //实现优先队列的基础数据结构，实际存储元素值，位置0用作哨兵
+	private any[] array;
+	    //构造器，初始化优先队列的最大存储数量	
+	public MinPQ(int length) {
+		currentSize = 0;
+		array = (any[])new Comparable[length+1];
+	}
+	    //待初始元素的构造器
+	public MinPQ(any[] items) {
+		currentSize = items.length;
+		array = (any[])new Comparable[currentSize+1];
+		
+		int i = 1;
+		for(any item : items) {
+			array[i++] = item;
+		}
+		
+		buildHeap();
+	}
+	    //插入一个元素
+	public void insert(any x) {
+		if(currentSize == array.length-1) {
+			enlargeArray(2*currentSize + 1);
+		}
+		int hole = ++currentSize;
+		for(array[0]=x;x.compareTo(array[hole/2])<0;hole=hole/2) {
+			array[hole] = array[hole/2];
+		}
+		array[hole] = x;
+	}
+        //找出优先队列中优先级最大的元素
+	public any findMin() throws Exception {
+		if(isEmpty()) {
+			throw new Exception();
+		}
+		return array[1];
+	}
+        //找到、返回、并删除优先队列中优先级最大的元素
+	public any deleteMin() throws Exception {
+		if(isEmpty()) {
+			throw new Exception();
+		}
+		any min = findMin();
+		array[1] = array[currentSize--];
+		sink(1);
+		
+		return min;
+	}
+        //判断优先级队列是否为空
+	public boolean isEmpty() {
+		return currentSize==0;
+	}
+        //将优先级队列置为空
+	public void makeEmpty() {
+		currentSize = 0;
+	}
+	    //工具方法，下沉
+	private void sink(int hole){
+		int child;
+		any temp = array[hole];
+		
+		for(;hole*2<=currentSize;hole=child) {
+			child = hole * 2;
+			if(child!=currentSize && array[child+1].compareTo(array[child])<0) {
+				child = child + 1;
+			}
+			if(array[child].compareTo(array[hole])<0) {
+				array[hole] = array[child];
+			}
+		}
+		
+		array[hole] = temp;
+	}
+        //工具方法，用于构建有一定数量元素的初始化优先队列
+	private void buildHeap() {
+		for(int i=currentSize/2;i>0;i--) {
+			sink(i);
+		}
+	}
+        //工具方法，对优先队列的数组进行扩容
+	private void enlargeArray(int newLength) {
+		@SuppressWarnings("unchecked")
+		any[] newArray = (any[])new Comparable[newLength];
+		
+		for(int i=1;i<=currentSize;i++) {
+			newArray[i] = array[i];
+		}
+		array = newArray;
+	}
+}
+关于优先队列自己的一些理解，优先队列的设计初衷就是用于解决快速寻找一些元素中的最高优先级元素（可以是最大值或是最小值或是其他的最高级准则）的问题，因此其实现类的重点和核心也就是实现快速找到最大值或者是快速找到最小值，而且优先队列的使用也是基于此功能，如果需要快速找到一些元素中的最大值或是最小值，则可以使用优先队列，将所有的元素加入优先队列，然后从优先队列中返回的时候便是每次返回当前队列中的最大值或者是最小值。
+
+优先队列常常用于堆排序，从而利用堆排序解决一些需要排序的题目，在leetcode的题目中，常常用优先队列解决TOP K 的题目，这类题利用优先队列可以非常容易地解决，但要注意，利用优先队列解决TOP K类题目的速度不是很快（线性对数级别），因此需要运行速度较快的情况下应采用另外一种解决TOP K类题的常用方法，采用类似于快速排序的方法，利用快速排序中的切分的方法，不断切分，直到找到top k的元素，这种方法的时间复杂度为线性级别（算法第四版221页）。除了TOP K类题目，还常常用于将M个输入流归并为一个有序的输出流。这两类题目都在leetcode中见过。利用优先队列非常容易解决。
+————————————————
+版权声明：本文为CSDN博主「E_N_T_J」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/E_N_T_J/article/details/85047524

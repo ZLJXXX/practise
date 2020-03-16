@@ -1,0 +1,35 @@
+1.下列哪一个可以做为对象继承之间的转换
+dynamic_cast : 
+继承体系安全向下转型或跨系转型；找出某对象占用内存的起始点
+static_cast:
+同旧式C转型，如int 到double
+const_cast:
+常用于去除某个对象的常量性
+reinterpret_cast
+不具备移植性，常见用途是转化函数指针类型
+
+2.执行下面语句后的输出为
+int I=1;
+if(I<=0)
+printf("****\n") ;
+else
+printf("%%%%\n");
+
+因为单个%是作为格式符使用的，两个%，表示要输出的就是%.
+
+3.类模板的使用实际上是类模板实例化成一个具体的 类
+
+4.
+struct A{
+void foo(){printf("foo");}
+virtual void bar(){printf("bar");}
+A(){bar();}
+};
+struct B:A{
+void foo(){printf("b_foo");}
+void bar(){printf("b_bar");}
+};
+
+A *p=newB;// A类指针指向一个实例化对象B， B类继承A类，先调用父类的无参构造函数，bar()输出bar，B类没有自己显示定义的构造函数。
+p->foo();//执行B类里的foo()函数，因为foo不是虚函数，所以直接调用父类的foo函数，输出foo
+p->bar();//执行B类的bar()函数, 该函数为虚函数，调用子类的实现，输出b_bar
