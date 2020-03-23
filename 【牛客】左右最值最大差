@@ -1,0 +1,46 @@
+【牛客】左右最值最大差
+原创置顶 famur 最后发布于2020-03-21 17:20:50 阅读数 1143  收藏
+展开
+左右最值最大差.
+
+题目描述
+给定一个长度为N(N>1)的整型数组A，可以将A划分成左右两个部分，左部分A[0…K]，右部分A[K+1…N-1]，K可以取值的范围是[0,N-2]。求这么多划分方案中，左部分中的最大值减去右部分最大值的绝对值，最大是多少？
+给定整数数组A和数组的大小n，请返回题目所求的答案。
+
+测试样例：
+[2,7,3,1,1],5
+返回：6
+
+解题思路
+首先找到最大值以及最大值所在的位置pos：
+1.如果pos=0，那么最大差值肯定是A[[0]-A[n-1]，因为左部分最大值必然是A[0]，
+右部分必然要包含A[n-1]，那么右部分最大值只会>=A[n-1]
+2.如果pos=n-1，那么最大差值肯定是A[n-1]-A[0]，道理和1一样
+3.如果pos是在中间位置，那么就是取(A[pos] - A[0]) 和(A[pos] - A[n-1])中最大的一个。
+
+class MaxGap {
+public:
+    int findMaxGap(vector<int> A, int n) {
+        // write code here
+        int max=INT_MIN;
+        int pos=0;
+        for(int i=0;i<n;++i)
+        {
+            if(A[i]>max)
+            {
+                max=A[i];
+                pos=i;                   //找到最大值所在位置
+            }
+        }
+        if(pos==0)                       //如果最大值是第一个元素
+            return A[pos]-A[n-1];
+        else if(pos==n-1)                 //如果最大值是最后一个元素
+            return A[pos]-A[0];
+        else                                 //如果最大值在中间 
+        {
+            int left=A[pos]-A[0];
+            int right=A[pos]-A[n-1];
+            return left>right? left:right;
+        }
+    }
+};
