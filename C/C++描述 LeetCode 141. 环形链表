@@ -1,0 +1,149 @@
+C/C++描述 LeetCode 141. 环形链表
+
+亓官劼 2020-10-09 16:02:10  1165  收藏 25
+分类专栏： LeetCode
+版权
+
+考研数据结构与算法
+考研数据结构与算法，内容包括数据结构与算法的全部内容，例如线性表、栈、队列等的实现，以及树、图、字符串等算法的实现过程与学习总结。包含考研的一些数据结构内容。
+亓官劼
+¥99.00
+订阅专栏
+C/C++描述 LeetCode 141. 环形链表
+  大家好，我叫亓官劼（qí guān jié ），在CSDN中记录学习的点滴历程，时光荏苒，未来可期，加油~博主目前仅在CSDN中写博客，唯一博客更新的地址为：亓官劼的博客
+
+本文原创为亓官劼，请大家支持原创，部分平台一直在恶意盗取博主的文章！！！
+
+给定一个链表，判断链表中是否有环。
+
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+
+如果链表中存在环，则返回 true 。 否则，返回 false 。
+
+进阶：
+
+你能用 O(1)（即，常量）内存解决此问题吗？
+
+示例 1：
+
+img
+
+输入：head = [3,2,0,-4], pos = 1
+输出：true
+解释：链表中有一个环，其尾部连接到第二个节点。
+1
+2
+3
+示例 2：
+
+img
+
+输入：head = [1,2], pos = 0
+输出：true
+解释：链表中有一个环，其尾部连接到第一个节点。
+1
+2
+3
+示例 3：
+
+img
+
+输入：head = [1], pos = -1
+输出：false
+解释：链表中没有环。
+1
+2
+3
+提示：
+
+链表中节点的数目范围是 [0, 104]
+-105 <= Node.val <= 105
+pos 为 -1 或者链表中的一个 有效索引 。
+题解一 哈希表
+暴力：使用一个Map存储每次走过的结点，如果当前结点已走过，则有环。
+
+时间复杂度：
+O ( n ) O(n)
+O(n)
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        map<ListNode*,int> mp;
+        ListNode *p = head;
+        int pos = -1;
+        int position = 0;
+        while(p){
+            if(mp[p] != 0){// mp中已有此结点
+                pos = position;
+                return true;
+            }
+            mp[p] = position++;
+            p = p->next;
+        }
+        return false;
+    }
+};
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+题解二 双指针
+使用两个指针分别走，这样可以让空间效率变为O(1)
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode* head) {
+        if (head == nullptr || head->next == nullptr) {
+            return false;
+        }
+        ListNode* slow = head;
+        ListNode* fast = head->next;
+        while (slow != fast) {
+            if (fast == nullptr || fast->next == nullptr) {
+                return false;
+            }
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return true;
+    }
+};
