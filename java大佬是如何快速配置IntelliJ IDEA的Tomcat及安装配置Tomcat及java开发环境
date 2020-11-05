@@ -1,0 +1,125 @@
+java大佬是如何快速配置IntelliJ IDEA的Tomcat及安装配置Tomcat及java开发环境
+
+孙叫兽 2020-11-04 23:03:32  255  收藏 3
+分类专栏： 教程 java 文章标签： tomcat jdk intellij idea 环境变量 java开发环境
+版权
+
+（精华帖）技术心得与感悟
+深入思考技术的本质与原理，感受编程之美。
+孙叫兽
+¥79.90
+订阅专栏
+孙叫兽，前端全栈工程师，java工程师。编译器及工具可以在主页QQ群群文件获取。
+
+JDK 可以到官网下载：http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+
+Tomcat下载：Http://tomcat.apache.org/
+
+IntelliJ IDEA下载：https://www.jetbrains.com/idea/download/
+
+我用的公司电脑，win7 64位。软件需要找到适合自己操作系统的东西配置。
+
+第一步下载并安装jdk.
+可以根据系统的版本下载相对应的JDK。
+
+
+
+然后下载安装
+
+安装过程中会出现两次 安装提示 。第一次是安装 jdk ，第二次是安装 jre 。建议两个都安装在同一个java文件夹中的不同文件夹中。（不能都安装在java文件夹的根目录下，jdk和jre安装在同一文件夹会出错）。路径一般默认即可，也可以更改不同的路径，无脑next即可。安装完成点击关闭。
+
+
+
+配置环境变量：右击“我的电脑”-->"高级"-->"环境变量"。
+
+（1）JAVA_HOME环境变量。
+作用：它指向jdk的安装目录，Eclipse/NetBeans/Tomcat等软件就是通过搜索JAVA_HOME变量来找到并使用安装好的jdk。
+配置方法：在系统变量里点击新建，变量名填写JAVA_HOME，变量值填写JDK的安装路径。（根据自己的安装路径填写）
+
+JAVA_HOME：D:\Java\jdk1.8.0_25
+
+
+
+CLASSPATH环境变量。
+
+作用：是指定类搜索路径，要使用已经编写好的类，前提当然是能够找到它们了，JVM就是通过CLASSPTH来寻找类的。我们需要把jdk安装目录下的lib子目录中的dt.jar和tools.jar设置到CLASSPATH中，当然，当前目录“.”也必须加入到该变量中。
+配置方法：
+新建CLASSPATH变量，变量值为：.;%JAVA_HOME%\lib;%JAVA_HOME%\lib\tools.jar 。CLASSPATH变量名字，可以大写也可以小写。注意不要忘记前面的点和中间的分号。且要在英文输入的状态下的分号和逗号。
+
+CLASSPATH  ：.;%JAVA_HOME%\lib;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar;
+
+
+
+path环境变量
+
+作用：指定命令搜索路径，在i命令行下面执行命令如javac编译java程序时，它会到PATH变量所指定的路径中查找看是否能找到相应的命令程序。我们需要把jdk安装目录下的bin目录增加到现有的PATH变量中，bin目录中包含经常要用到的可执行文件如javac/java/javadoc等待，设置好PATH变量后，就可以在任何目录下执行javac/java等工具了。
+
+在系统变量里找到Path变量，这是系统自带的，不用新建。双击Path，由于原来的变量值已经存在，故应在已有的变量后加上“;%JAVA_HOME%\bin;%JAVA_HOME%\jre\bin”。注意前面的分号。
+
+Path：;%JAVA_HOME%\bin;%JAVA_HOME%\jre\bin
+
+
+
+检验是否配置成功 运行cmd 分别输入java，javac， java -version （java 和 -version 之间有空格）。
+
+
+
+Javac
+
+ 
+
+javac -version    查看版本
+
+
+
+若如图所示 显示版本信息 则说明安装和配置成功。
+
+ 
+
+第二步，开始配置tomcate
+首先下载tomcat,并且解压到目录：下载地址在文章顶部。
+
+
+
+1.第一步鼠标右键计算机->属性->高级系统设置，进去之后，点击环境变量，如下图所示
+
+ 
+
+2.第二步开始配置tomcat的环境变量，新建系统变量名CATALINA_BASE，值tomcat的安装路径，如下图所示：
+
+
+
+3.第三步新建系统变量CATALINA_HOME，值tomcat的安装路径，如下图所示：
+
+
+
+4.第四步找到系统变量path，在值里面添加“%CATALINA_HOME%\lib;%CATALINA_HOME%\bin”，如下图所示：
+
+
+
+5.点击确定，保存系统变量的配置之后，按win+R键打开运行，输入cmd，点击确定，在命令行中输入“startup”，启动tomcat服务，启动成功代表环境变量配置成功，如下图所示：
+
+
+
+6.第六步我们在浏览器中输入“localhost:8080”，出现如下界面，代表tomcat环境搭建成功，如下图所示：
+
+
+
+第三步，在IntelliJ IDEA配置Tomcat
+1，点击Run---EDit Configurations...
+
+
+
+ 2.点击左侧“+”号，找到Tomcat Server---Local（若是没有找到Tomcat Server 可以点击最后一行 34 items more）
+
+
+
+
+
+3.在Tomcat Server -> Unnamed -> Server -> Application server项目下，点击 Configuration ，找到本地 Tomcat 服务器，再点击 OK按钮。
+
+
+
+到这里就可以用IntelliJ IDEA跑java项目啦，是不是很简单呢，大家都尝试一下吧。
+
+ 
