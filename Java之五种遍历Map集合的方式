@@ -1,0 +1,132 @@
+Java之五种遍历Map集合的方式
+
+华为云 2021-02-01 11:30:12  4880  收藏 115
+分类专栏： 程序员 技术交流 文章标签： java map iterator 对象
+版权
+摘要：在java中所有的map都实现了Map接口，因此所有的Map都可以用以下的方式去遍历。
+在java中所有的map都实现了Map接口，因此所有的Map都可以用以下的方式去遍历。这篇文章主要给大家介绍了关于Java中遍历Map集合的5种方式，文中通过示例代码介绍的非常详细，对大家的学习或者工作具有一定的参考学习价值，需要的朋友们下面一起学习学习吧。
+
+方式一 通过Map.keySet使用iterator遍历
+@Test
+public void testHashMap1() {
+    Map<Integer, String> map = new HashMap<>();
+    map.put(001, "Java");
+    map.put(002, "数据库");
+    map.put(003, "Vue");
+    System.out.println(map);
+ 
+    // 通过Map.keySet使用iterator遍历key,然后通过key得到对应的value值
+    Iterator<Integer> iterator = map.keySet().iterator();
+    while (iterator.hasNext()) {
+        Integer key = iterator.next();
+        String value = map.get(key);
+        System.out.println("key = " + key + ", value = " + value);
+    }
+}
+结果：
+
+{1=Java, 2=数据库, 3=Vue}
+key = 1, value = Java
+key = 2, value = 数据库
+key = 3, value = Vue
+方式二 通过Map.entrySet使用iterator遍历
+@Test
+public void testHashMap2() {
+    Map<Integer, String> map = new HashMap<>();
+    map.put(001, "Java");
+    map.put(002, "数据库");
+    map.put(003, "Vue");
+    System.out.println(map);
+ 
+    // 通过Map.entrySet使用iterator遍历key和value；注意 Set entrySet()：返回所有key-value对构成的Set集合
+    Iterator<Map.Entry<Integer, String>> entries = map.entrySet().iterator();
+    while (entries.hasNext()) {
+        Map.Entry<Integer, String> entry = entries.next();
+        System.out.println(entry);
+    }
+}
+结果：
+
+{1=Java, 2=数据库, 3=Vue}
+1=Java
+2=数据库
+3=Vue
+方式三 通过Map.keySet遍历
+@Test
+public void testHashMap3() {
+    Map<Integer, String> map = new HashMap<>();
+    map.put(001, "Java");
+    map.put(002, "数据库");
+    map.put(003, "Vue");
+    System.out.println(map);
+ 
+    // 通过Map.keySet遍历key,然后通过key得到对应的value值
+    for (Integer key : map.keySet()) {
+        System.out.println("key = " + key + ", value = " + map.get(key));
+    }
+}
+结果：
+
+{1=Java, 2=数据库, 3=Vue}
+key = 1, value = Java
+key = 2, value = 数据库
+key = 3, value = Vue
+方式四 通过For-Each迭代entries，使用Map.entrySet遍历
+@Test
+public void testHashMap4() {
+    Map<Integer, String> map = new HashMap<>();
+    map.put(001, "Java");
+    map.put(002, "数据库");
+    map.put(003, "Vue");
+    System.out.println(map);
+ 
+    // 使用For-Each迭代entries，通过Map.entrySet遍历key和value
+    for (Map.Entry<Integer, String> entry : map.entrySet()) {
+        System.out.println("key = " + entry.getKey() + ", value = " + entry.getValue());
+    }
+}
+结果
+
+{1=Java, 2=数据库, 3=Vue}
+key = 1, value = Java
+key = 2, value = 数据库
+key = 3, value = Vue
+方式五 使用lambda表达式forEach遍历
+@Test
+public void testHashMap5() {
+    Map<Integer, String> map = new HashMap<>();
+    map.put(001, "Java");
+    map.put(002, "数据库");
+    map.put(003, "Vue");
+    System.out.println(map);
+ 
+	// 使用lambda表达式forEach遍历
+    map.forEach((k, v) -> System.out.println("key = " + k + ", value = " + v));
+}
+forEach 源码
+
+default void forEach(BiConsumer<? super K, ? super V> action) {
+        Objects.requireNonNull(action);
+        for (Map.Entry<K, V> entry : entrySet()) {
+            K k;
+            V v;
+            try {
+                k = entry.getKey();
+                v = entry.getValue();
+            } catch(IllegalStateException ise) {
+                // this usually means the entry is no longer in the map.
+                throw new ConcurrentModificationException(ise);
+            }
+            action.accept(k, v);
+        }
+    }
+从源码可以看到，这种新特性就是在传统的迭代方式上加了一层壳，但是让代码变得更加简单。（开发中推荐使用）
+
+总结
+推荐使用 entrySet 遍历 Map 类集合 KV （文章中的第四种方式），而不是 keySet 方式进行遍历。
+
+keySet 其实是遍历了 2 次，第一次是转为 Iterator 对象，第二次是从 hashMap 中取出 key 所对应的 value值。而 entrySet 只是遍历了一次，就把 key 和 value 都放到了 entry 中，效率更高。
+
+values()返回的是 V 值集合，是一个 list 集合对象；keySet()返回的是 K 值集合，是一个 Set 集合对象；entrySet()返回的是 K-V 值组合集合。
+
+如果是 JDK8，推荐使用Map.forEach 方法（文章中的第五种方式）。
