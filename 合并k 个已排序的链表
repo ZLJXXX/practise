@@ -1,0 +1,36 @@
+优先级队列区别于普通队列的一点是：优先级队列如果插入的节点是结构体类型，则要在结构体中重载比较操作符函数。
+第一个参数为元素的类型，第二个参数为容器类型，第三个参数为比较函数（默认为less），上面的为从小到大的优先级队列，
+如果将greater改为less或者删去第三个参数，即为权值从大到小排列。如图。注意greater包含在头文件functional内。 
+题目描述
+合并\ k k 个已排序的链表并将其作为一个已排序的链表返回。分析并描述其复杂度。 
+示例1
+输入
+复制
+[{1,2,3},{4,5,6,7}]
+返回值
+复制
+{1,2,3,4,5,6,7}
+demo:
+struct cmp{
+    bool operator()(ListNode *a, ListNode* b){
+        return a->val > b->val;
+     }
+};
+class Solution {
+public:
+    ListNode *mergeKLists(vector<ListNode *> &lists) {
+        priority_queue<ListNode*, vector<ListNode*>,cmp> q;
+        for(int i = 0; i < lists.size(); i++)
+            if(lists[i] != NULL) q.push(lists[i]);
+        ListNode head = ListNode(0);
+        ListNode* tmp = &head;
+        while(!q.empty()){
+            ListNode* top = q.top();
+            q.pop();
+            if(top->next) q.push(top->next);
+            tmp -> next = top;
+            tmp = tmp ->next;
+        }
+        return head.next;
+    }
+};
